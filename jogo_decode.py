@@ -173,3 +173,57 @@ def jogo(window):
         time.sleep(delay_time)
         
     pygame.mixer.music.play(loops=0) # Toca uma vez, não em loop (-1)
+
+    while game:
+        clock.tick(FPS)
+        timer = pygame.time.get_ticks() - timer_start
+
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                pygame.mixer.music.stop()
+                return (FEXO, SCORE)
+
+            if evento.type == pygame.KEYDOWN:
+                if evento.key in PISTA_KEYS:
+                    pista_color = PISTA_KEYS[evento.key]
+                    key_press_time[pista_color] = timer
+                    
+                    for button in judgment_sprites:
+                        if PISTA_X[pista_color] == button.rect.x:
+                            button.rect.y -= 10 
+                            
+                if evento.key == pygame.K_SPACE: 
+                    pygame.mixer.music.stop()
+                    return (FINALIZAR, SCORE)
+
+            if evento.type == pygame.KEYUP:
+                if evento.key in PISTA_KEYS:
+                    pista_color = PISTA_KEYS[evento.key]
+                    for button in judgment_sprites:
+                        if PISTA_X[pista_color] == button.rect.x:
+                            button.rect.y += 10
+
+        for color, windows in hit_windows.items():
+            if windows:
+                window_data = windows[0] # Janela da próxima nota
+                t_press = key_press_time[color]
+                
+                # Verifica se a nota já passou do tempo limite da janela
+                if timer >= window_data[2] + 15:
+                    is_hit = False
+                    
+                    
+                    if t_press >= window_data[0] and t_press <= window_data[2]:
+                        SCORE += 50 * mult # Acerto básico
+                        is_hit = True
+                        
+                        
+                        if abs(t_press - window_data[1]) < 50:
+                            SCORE += 50 * mult 
+                    
+                    windows.pop(0)
+                    if is_hit:
+                        key_press_time[color] = 0
+
+        if timer >= music_duration_ms + 5000: # 5s após o fim da música
+            return (FINALIZAR, SCORE)
