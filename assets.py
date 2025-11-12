@@ -47,3 +47,21 @@ class NotaJulgamento(pygame.sprite.Sprite):
     def update(self):
         self.rect.y += self.speedy
         self.rect.x += self.speedx
+
+class FeedbackVisual(pygame.sprite.Sprite):
+    def _init_(self, image, x, y, duration_ms=200):
+        pygame.sprite.Sprite._init_(self)
+        
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.centerx = x + 60 
+        self.rect.bottom = y 
+        
+        self.duration_ms = duration_ms
+        self.spawn_time = pygame.time.get_ticks()
+
+    def update(self):
+        elapsed_time = pygame.time.get_ticks() - self.spawn_time        
+        if elapsed_time > self.duration_ms:
+            self.kill()        
+        self.rect.y -= 3
