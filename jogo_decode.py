@@ -227,3 +227,33 @@ def jogo(window):
 
         if timer >= music_duration_ms + 5000: # 5s após o fim da música
             return (FINALIZAR, SCORE)
+        
+        all_sprites.update() 
+        
+        window.fill((0, 0, 0))
+        window.blit(assets["fundo2"], (0, 0))
+
+        linhas_x = list(PISTA_X.values()) 
+        
+        # Desenha as linhas de pista
+        for x in linhas_x:
+            x_centralizado = x + CENTRO_PISTA_OFFSET
+            pygame.draw.line(window, (180, 180, 180), (x_centralizado, -100), (x_centralizado, 700), 5)
+
+
+        
+        # Desenha o Placar
+        score_num = assets["fonte1"].render(f'{SCORE}', True, (252, 75, 8))
+        score_text = assets["fonte2"].render('pontos:', True, (252, 75, 8))
+        window.blit(score_num, (20, 100))
+        window.blit(score_text, (20, 50))
+
+        # Desenha a mensagem de saída
+        if timer >= music_duration_ms - 2000 and int(timer / 1000) % 2 == 0:
+            exit_text = assets["fonte2"].render('pressione espaco para ver resultado final', True, (252, 75, 8))
+            window.blit(exit_text, (45, 10))
+
+        all_sprites.draw(window)
+        pygame.display.update()
+
+    return(FINALIZAR, SCORE)
