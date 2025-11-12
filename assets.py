@@ -31,3 +31,19 @@ class NotaCaindo(pygame.sprite.Sprite):
         self.rect.x += self.speedx
         if self.rect.top > 715:
             self.kill()
+
+class NotaJulgamento(pygame.sprite.Sprite):
+    def __init__(self, img, pos_x):
+
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = img
+        self.rect = self.image.get_rect()
+        self.rect.x = pos_x
+        self.rect.y = 550
+        self.speedy = 0
+        self.speedx = 0
+
+    def update(self):
+        self.rect.y += self.speedy
+        self.rect.x += self.speedx
