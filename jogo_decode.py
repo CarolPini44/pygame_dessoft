@@ -119,3 +119,57 @@ def jogo(window):
 
     (59.820, 60.000)
     ]
+
+    chart_data = {
+        'amarelo': amarelo,
+        'verde': verde,
+        'azul': azul,
+        'vermelho': vermelho
+    }
+    
+    SCORE = 0
+    mult = 1
+    game = True
+    
+    all_sprites = pygame.sprite.Group()
+    nota_sprites = pygame.sprite.Group()
+    judgment_sprites = pygame.sprite.Group()
+    
+    key_press_time = {'azul': 0, 'vermelho': 0, 'verde': 0, 'amarelo': 0}
+    hit_windows = {'azul': [], 'vermelho': [], 'verde': [], 'amarelo': []}
+    
+    judgment_sprites.add(NotaJulgamento(assets["sBran"], PISTA_X['azul']))
+    judgment_sprites.add(NotaJulgamento(assets["sBran"], PISTA_X['vermelho']))
+    judgment_sprites.add(NotaJulgamento(assets["sBran"], PISTA_X['verde']))
+    judgment_sprites.add(NotaJulgamento(assets["sBran"], PISTA_X['amarelo']))
+    all_sprites.add(judgment_sprites)
+
+    asset_map = {
+        'azul': assets["sAzul"], 'vermelho': assets["sVerm"], 
+        'verde': assets["sVerd"], 'amarelo': assets["sAMAR"]
+    }
+
+    for color, notes in chart_data.items():
+        img_asset = asset_map[color]
+        x_pos = PISTA_X[color]
+        
+        for t_inicio, t_fim in notes:
+            t_acerto_ms = int(t_inicio * 1000)
+            
+            y_start = t_acerto_ms - TEMPO_QUEDA_MS
+            
+            note = NotaCaindo(img_asset, x_pos, y_start)
+            nota_sprites.add(note)
+            
+            hit_windows[color].append([t_acerto_ms - 200, t_acerto_ms, t_acerto_ms + 350])
+
+    all_sprites.add(nota_sprites)
+
+
+    
+    timer_start = pygame.time.get_ticks()
+    delay_time = (TEMPO_PREPARACAO_MS - (pygame.time.get_ticks() - timer_start)) / 1000
+    if delay_time > 0:
+        time.sleep(delay_time)
+        
+    pygame.mixer.music.play(loops=0) # Toca uma vez, não em loop (-1)
