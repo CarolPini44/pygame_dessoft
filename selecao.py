@@ -23,3 +23,14 @@ def carrega_imagens(imagem):
             print('Erro ao tentar ler imagem: {0}' .format(imagem))
             sys.exit()
     return cache_imagens[imagem]
+
+cache_sons = {}
+def carrega_sons(som):
+    if som not in cache_sons:
+        try:
+            caminho = os.path.join(os.path.dirname(os.path.abspath(__file__)), som)
+            cache_sons[som] = pygame.mixer.Sound(caminho)
+        except:
+            print('Erro ao tentar ler arquivo de som: {0}' .format(som))
+            sys.exit()
+    return cache_sons[som]
