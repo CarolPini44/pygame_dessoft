@@ -55,3 +55,24 @@ def inicial(tela):
 
         clock.tick(60)
         eventos = pygame.event.get()
+
+        for evento in eventos:
+            if evento.type == pygame.QUIT or evento.type == pygame.KEYDOWN and evento.key == pygame.K_ESCAPE:
+                pygame.quit()
+                sys.exit()
+                pygame.mixer.stop()
+            if evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_SPACE:
+                    pygame.mixer.music.stop()
+                    som_acao.play()
+            if evento.type == pygame.KEYUP:
+                if evento.key == pygame.K_SPACE:
+                    som_acao.stop()
+                    modulo = MENU
+                    game = False           
+
+        tela.fill((0,0,0))
+        tela.blit(fundo2, (0,0))
+        pygame.display.update()
+
+    return modulo
